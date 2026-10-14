@@ -50,3 +50,4 @@ jobs:
         env:
           VITE_MEDIA_API_BASE_URL: ${{ secrets.VITE_MEDIA_API_BASE_URL }}
           VITE_CONTENT_API_URL: ${{ secrets.VITE_CONTENT_API_URL }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
