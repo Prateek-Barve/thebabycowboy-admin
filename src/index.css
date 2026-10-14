@@ -1,0 +1,602 @@
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #242424;
+  background: #f7f7f5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  --surface: #ffffff;
+  --canvas: #f7f7f5;
+  --text: #242424;
+  --muted: #858585;
+  --border: #eaeae7;
+  --accent: #343b30;
+  --sidebar: #1d201c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  display: flex;
+  width: 258px;
+  flex-direction: column;
+  padding: 26px 16px 18px;
+  background: var(--sidebar);
+  color: #f4f4f0;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 32px;
+}
+
+.brand-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px;
+  background: #e8eadf;
+  color: #242820;
+  font-family: "Manrope", sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.sidebar-brand strong,
+.sidebar-brand small {
+  display: block;
+}
+
+.sidebar-brand strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.4px;
+}
+
+.sidebar-brand small {
+  margin-top: 5px;
+  color: #92978e;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 29px;
+}
+
+.nav-group-label {
+  margin: 0 10px 11px;
+  color: #777d73;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 43px;
+  margin: 3px 0;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #b7bbb3;
+  font-size: 13px;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.nav-link:hover {
+  background: #2a2e28;
+  color: #ffffff;
+}
+
+.nav-link--active {
+  border-color: #3c4238;
+  background: #30362c;
+  color: #ffffff;
+}
+
+.nav-icon {
+  display: grid;
+  width: 21px;
+  place-items: center;
+  font-size: 19px;
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding: 18px 10px 0;
+  border-top: 1px solid #353932;
+  color: #a8ada4;
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a7c78d;
+}
+
+.admin-main {
+  min-height: 100vh;
+  margin-left: 258px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 38px;
+  border-bottom: 1px solid var(--border);
+  background: rgb(255 255 255 / 94%);
+  backdrop-filter: blur(12px);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-overline,
+.eyebrow {
+  margin: 0 0 7px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.admin-label {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #6d7169;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+
+.menu-button {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 22px;
+}
+
+.admin-content {
+  width: 100%;
+  max-width: 1500px;
+  min-height: calc(100vh - 135px);
+  margin: 0 auto;
+  padding: 38px;
+}
+
+.admin-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 20px 38px;
+  border-top: 1px solid var(--border);
+  color: #92928c;
+  font-size: 11px;
+}
+
+.dashboard-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.welcome-panel {
+  position: relative;
+  display: flex;
+  min-height: 218px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+  padding: 34px 38px;
+  border: 1px solid #e5e6df;
+  border-radius: 16px;
+  background: #eeefe8;
+}
+
+.welcome-panel > div:first-child {
+  position: relative;
+  z-index: 1;
+  max-width: 550px;
+}
+
+.welcome-panel h1,
+.page-heading h1 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+}
+
+.welcome-panel p:not(.eyebrow) {
+  max-width: 420px;
+  margin: 13px 0 0;
+  color: #74776f;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.welcome-mark {
+  position: absolute;
+  top: 50%;
+  right: 45px;
+  color: #dfe1d6;
+  font-family: "Manrope", sans-serif;
+  font-size: 190px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(-50%);
+  user-select: none;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 38px 0 19px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.section-heading p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.section-count {
+  color: #85877e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.management-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.management-card {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  transition: transform 180ms ease, border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.management-card:hover {
+  transform: translateY(-3px);
+  border-color: #c9cec0;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 4%);
+}
+
+.management-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.management-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 10px;
+  background: #eff0e9;
+  color: #424a3b;
+  font-size: 21px;
+}
+
+.card-number {
+  color: #b0b0a8;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.management-card h3 {
+  margin: 22px 0 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+}
+
+.management-card > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.card-action {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 18px;
+  color: #454c3f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-heading {
+  padding: 8px 0 26px;
+}
+
+.page-heading > p:last-child {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+.sign-in-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at top left, #e8eade 0%, transparent 45%),
+    var(--canvas);
+}
+
+.sign-in-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 38px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 20px 70px rgb(0 0 0 / 5%);
+}
+
+.sign-in-card .brand-mark {
+  margin-bottom: 30px;
+}
+
+.sign-in-card h1 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 29px;
+  letter-spacing: -1.2px;
+}
+
+.sign-in-card > p:not(.eyebrow) {
+  margin: 12px 0 25px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.primary-button {
+  display: flex;
+  width: 100%;
+  min-height: 47px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.primary-button:hover {
+  background: #252b22;
+}
+
+.sign-in-card > small {
+  display: block;
+  margin-top: 20px;
+  color: #999;
+  font-size: 10px;
+  text-align: center;
+}
+
+@media (min-width: 1500px) {
+  .management-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .management-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-content {
+    padding: 28px;
+  }
+
+  .topbar {
+    padding: 15px 28px;
+  }
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    width: 270px;
+    transform: translateX(-100%);
+    transition: transform 220ms ease;
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    display: block;
+    border: 0;
+    background: rgb(0 0 0 / 45%);
+  }
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .menu-button {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .topbar {
+    min-height: 72px;
+    padding: 13px 17px;
+  }
+
+  .topbar-overline {
+    font-size: 8px;
+  }
+
+  .topbar h2 {
+    font-size: 16px;
+  }
+
+  .admin-label {
+    display: none;
+  }
+
+  .admin-content {
+    min-height: calc(100vh - 130px);
+    padding: 22px 16px;
+  }
+
+  .admin-footer {
+    padding: 17px 16px;
+    font-size: 10px;
+  }
+
+  .welcome-panel {
+    min-height: 200px;
+    padding: 25px 22px;
+  }
+
+  .welcome-panel h1 {
+    max-width: 270px;
+    font-size: 27px;
+  }
+
+  .welcome-mark {
+    right: -8px;
+    font-size: 140px;
+    opacity: 0.7;
+  }
+
+  .management-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .management-card {
+    min-height: 165px;
+  }
+
+  .section-heading {
+    align-items: start;
+  }
+
+  .section-count {
+    padding-top: 5px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .sign-in-card {
+    padding: 28px 23px;
+  }
+}
