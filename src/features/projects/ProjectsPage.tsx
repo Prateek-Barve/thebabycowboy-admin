@@ -1,201 +1,9 @@
-// import { useCallback, useEffect, useState } from "react";
-// import { contentApi, } from "../../services/contentApi";
-// import type { Project } from "./project.types";
-// import { ApiError } from "../../services/apiClient";
-
-// export default function ProjectsPage() {
-//   const [projects, setProjects] = useState<Project[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   const loadProjects = useCallback(async () => {
-//     try {
-//       setLoading(true);
-//       setError(null);
-
-//       const data = await contentApi.get<Project[]>("/api/projects");
-
-//       setProjects(data);
-//     } catch (err) {
-//       if (err instanceof ApiError) {
-//         setError(`Unable to load projects (${err.status}): ${err.message}`);
-//       } else {
-//         setError(
-//           err instanceof Error
-//             ? err.message
-//             : "Something went wrong while loading projects."
-//         );
-//       }
-//     } finally {
-//       setLoading(false);
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     void loadProjects();
-//   }, [loadProjects]);
-
-//   return (
-//     <div className="projects-page">
-//       <section className="projects-heading">
-//         <div>
-//           <p className="eyebrow">PORTFOLIO MANAGEMENT</p>
-//           <h1>Projects</h1>
-//           <p>Manage the projects displayed on your digital space.</p>
-//         </div>
-
-//         <button
-//           type="button"
-//           className="primary-button projects-add-button"
-//           onClick={() => alert("We'll implement the Create Project form next.")}
-//         >
-//           + Add project
-//         </button>
-//       </section>
-
-//       <section className="projects-toolbar">
-//         <div>
-//           <span className="projects-count">
-//             {projects.length.toString().padStart(2, "0")}
-//           </span>
-//           <span> projects in your portfolio</span>
-//         </div>
-
-//         <button
-//           type="button"
-//           className="secondary-button"
-//           onClick={() => void loadProjects()}
-//           disabled={loading}
-//         >
-//           ↻ Refresh
-//         </button>
-//       </section>
-
-//       {loading ? (
-//         <div className="projects-message">
-//           <span className="loading-spinner" />
-//           <p>Loading your projects...</p>
-//         </div>
-//       ) : error ? (
-//         <div className="projects-error">
-//           <h3>Couldn't load projects</h3>
-//           <p>{error}</p>
-
-//           <button
-//             type="button"
-//             className="secondary-button"
-//             onClick={() => void loadProjects()}
-//           >
-//             Try again
-//           </button>
-//         </div>
-//       ) : projects.length === 0 ? (
-//         <div className="projects-empty">
-//           <span className="empty-icon">▦</span>
-//           <h3>Your portfolio is waiting.</h3>
-//           <p>
-//             You haven't added any projects yet. Create your first project
-//             to get started.
-//           </p>
-//         </div>
-//       ) : (
-//         <div className="projects-table-wrapper">
-//           <table className="projects-table">
-//             <thead>
-//               <tr>
-//                 <th>PROJECT</th>
-//                 <th>DESCRIPTION</th>
-//                 <th>TECHNOLOGIES</th>
-//                 <th>LINK</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {projects.map((project) => (
-//                 <tr key={project.id}>
-//                   <td>
-//                     <div className="project-identity">
-//                       {project.thumbnailUrl ? (
-//                         <img
-//                           className="project-thumbnail"
-//                           src={project.thumbnailUrl}
-//                           alt=""
-//                           loading="lazy"
-//                         />
-//                       ) : (
-//                         <div className="project-thumbnail project-thumbnail-placeholder">
-//                           ▦
-//                         </div>
-//                       )}
-
-//                       <div className="project-name">
-//                         <strong>{project.title}</strong>
-//                         <span>
-//                           {project.id.slice(0, 8).toUpperCase()}
-//                         </span>
-//                       </div>
-//                     </div>
-//                   </td>
-
-//                   <td>
-//                     <p className="project-description">
-//                       {project.shortDescription}
-//                     </p>
-//                   </td>
-
-//                   <td>
-//                     <div className="project-skills">
-//                       {project.skills?.length ? (
-//                         <>
-//                           {project.skills.slice(0, 3).map((skill) => (
-//                             <span
-//                               className="project-skill-tag"
-//                               key={skill.id}
-//                             >
-//                               {skill.name}
-//                             </span>
-//                           ))}
-
-//                           {project.skills.length > 3 && (
-//                             <span className="project-skill-more">
-//                               +{project.skills.length - 3}
-//                             </span>
-//                           )}
-//                         </>
-//                       ) : (
-//                         <span className="project-no-skills">
-//                           No skills assigned
-//                         </span>
-//                       )}
-//                     </div>
-//                   </td>
-
-//                   <td>
-//                     {project.gitHubUrl ? (
-//                       <a
-//                         className="project-github-link"
-//                         href={project.gitHubUrl}
-//                         target="_blank"
-//                         rel="noopener noreferrer"
-//                       >
-//                         GitHub ↗
-//                       </a>
-//                     ) : (
-//                       <span className="project-no-skills">—</span>
-//                     )}
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 
 import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "@clerk/react";
+// import { useAuth } from "@clerk/react";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { useMsal } from "@azure/msal-react";
+import { contentApiRequest } from "../../authConfig";
 import { ApiError } from "../../services/apiClient";
 import { contentApi } from "../../services/contentApi";
 import type {
@@ -237,8 +45,34 @@ function getProjectStatus(status: ProjectStatus): string {
 }
 
 export default function ProjectsPage() {
-  const { getToken } = useAuth();
+  // const { getToken } = useAuth();
+  const { instance, accounts } = useMsal();
 
+const getToken = useCallback(async (): Promise<string | null> => {
+  const account = instance.getActiveAccount() ?? accounts[0];
+
+  if (!account) return null;
+
+  try {
+    const response = await instance.acquireTokenSilent({
+      ...contentApiRequest,
+      account,
+    });
+
+    return response.accessToken;
+  } catch (error) {
+    if (error instanceof InteractionRequiredAuthError) {
+      const response = await instance.acquireTokenPopup({
+        ...contentApiRequest,
+        account,
+      });
+
+      return response.accessToken;
+    }
+
+    throw error;
+  }
+}, [instance, accounts]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<SkillOption[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,6 +1,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAuth } from "@clerk/react";
+// import { useAuth } from "@clerk/react";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { useMsal } from "@azure/msal-react";
+import { contentApiRequest } from "../../authConfig";
 
 import { contentApi } from "../../services/contentApi";
 import type {
@@ -18,7 +21,34 @@ type Notice = {
 };
 
 export default function SkillsPage() {
-  const { getToken } = useAuth();
+  // const { getToken } = useAuth();
+  const { instance, accounts } = useMsal();
+
+const getToken = useCallback(async (): Promise<string | null> => {
+  const account = instance.getActiveAccount() ?? accounts[0];
+
+  if (!account) return null;
+
+  try {
+    const response = await instance.acquireTokenSilent({
+      ...contentApiRequest,
+      account,
+    });
+
+    return response.accessToken;
+  } catch (error) {
+    if (error instanceof InteractionRequiredAuthError) {
+      const response = await instance.acquireTokenPopup({
+        ...contentApiRequest,
+        account,
+      });
+
+      return response.accessToken;
+    }
+
+    throw error;
+  }
+}, [instance, accounts]);
 
   const [skills, setSkills] = useState<Skill[]>([]);
   const [categories, setCategories] = useState<SkillCategory[]>([]);

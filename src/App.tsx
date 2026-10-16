@@ -1,74 +1,94 @@
-// // 
+
+// import { BrowserRouter } from "react-router-dom";
 // import {
 //   Show,
-//   SignInButton,
-//   SignUpButton,
-//   UserButton,
+//   SignInButton
 // } from "@clerk/react";
+// import AdminRouter from "./app/router";
 
 // function App() {
 //   return (
-//     <main className="auth-test">
-//       <h1>thebabycowboy Admin</h1>
-//       <p>Your private content management application.</p>
-
+//     <BrowserRouter>
 //       <Show when="signed-out">
-//         <div className="auth-test__actions">
-//           <SignInButton>
-//             <button type="button">Sign in</button>
-//           </SignInButton>
+//         <main className="sign-in-page">
+//           <div className="sign-in-card">
+//             <span className="brand-mark">b.</span>
+//             <p className="eyebrow">PRIVATE WORKSPACE</p>
+//             <h1>thebabycowboy</h1>
+//             <p>Sign in to access your content management studio.</p>
 
-//           <SignUpButton>
-//             <button type="button">Create account</button>
-//           </SignUpButton>
-//         </div>
+//             <SignInButton mode="modal">
+//               <button className="primary-button" type="button">
+//                 Sign in to continue <span aria-hidden="true">↗</span>
+//               </button>
+//             </SignInButton>
+
+//             <small>Authorized owner access only.</small>
+//           </div>
+//         </main>
 //       </Show>
 
 //       <Show when="signed-in">
-//         <div className="auth-test__signed-in">
-//           <p>Authentication successful.</p>
-//           <p>Next, we'll connect your account to the Admin dashboard.</p>
-//           <UserButton />
-//         </div>
+//         <AdminRouter />
 //       </Show>
-//     </main>
+//     </BrowserRouter>
 //   );
 // }
 
 // export default App;
 
 import { BrowserRouter } from "react-router-dom";
-import {
-  Show,
-  SignInButton
-} from "@clerk/react";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import AdminRouter from "./app/router";
+import { contentApiRequest } from "./authConfig";
 
 function App() {
+  const isAuthenticated = useIsAuthenticated();
+  const { instance, inProgress } = useMsal();
+
+  function handleSignIn() {
+    void instance.loginRedirect({
+      scopes: contentApiRequest.scopes,
+    });
+  }
+
+  if (inProgress !== "none") {
+    return (
+      <main className="sign-in-page">
+        <div className="sign-in-card">
+          <p>Connecting to your workspace...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <BrowserRouter>
-      <Show when="signed-out">
+      {isAuthenticated ? (
+        <AdminRouter />
+      ) : (
         <main className="sign-in-page">
           <div className="sign-in-card">
             <span className="brand-mark">b.</span>
             <p className="eyebrow">PRIVATE WORKSPACE</p>
             <h1>thebabycowboy</h1>
-            <p>Sign in to access your content management studio.</p>
+            <p>
+              Sign in to access your content management studio.
+            </p>
 
-            <SignInButton mode="modal">
-              <button className="primary-button" type="button">
-                Sign in to continue <span aria-hidden="true">↗</span>
-              </button>
-            </SignInButton>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={handleSignIn}
+            >
+              Sign in to continue{" "}
+              <span aria-hidden="true">↗</span>
+            </button>
 
             <small>Authorized owner access only.</small>
           </div>
         </main>
-      </Show>
-
-      <Show when="signed-in">
-        <AdminRouter />
-      </Show>
+      )}
     </BrowserRouter>
   );
 }
