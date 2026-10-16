@@ -96,6 +96,8 @@ export default function JournalsPage() {
   useEffect(() => {
     void loadJournals();
   }, [loadJournals]);
+  
+
 
   const filteredJournals = useMemo(() => {
     const term = search.trim().toLowerCase();
